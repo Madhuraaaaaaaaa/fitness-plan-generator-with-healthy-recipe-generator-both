@@ -5,7 +5,8 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Badge } from './ui/badge';
-import { ChefHat, Clock, Users, X, Sparkles, UtensilsCrossed } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import { ChefHat, Clock, Users, X, Sparkles, UtensilsCrossed, CheckCircle, AlertCircle } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
 interface Recipe {
@@ -28,6 +29,7 @@ export function RecipeGenerator() {
   const [mealType, setMealType] = useState('');
   const [generatedRecipes, setGeneratedRecipes] = useState<Recipe[] | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
 
   const addIngredient = () => {
     if (currentIngredient.trim() && !ingredients.includes(currentIngredient.trim().toLowerCase())) {
@@ -49,19 +51,18 @@ export function RecipeGenerator() {
 
   const generateRecipes = async () => {
     setIsGenerating(true);
-    
+
     // Mock recipe generation - In a real app, this would call an API
     setTimeout(() => {
-      const mockRecipes: Recipe[] = [
+      // Expanded pool of mock recipes
+      const allRecipes = [
         {
           id: '1',
           name: 'Mediterranean Chickpea Salad',
           ingredients: ['chickpeas', 'tomatoes', 'cucumber', 'red onion', 'olive oil', 'lemon juice', 'feta cheese', 'oregano'],
-          availableIngredients: ingredients.filter(ing => ['chickpeas', 'tomatoes', 'cucumber', 'olive oil'].includes(ing)),
-          missingIngredients: ['red onion', 'lemon juice', 'feta cheese', 'oregano'],
           prepTime: '15 min',
           servings: 4,
-          difficulty: 'Easy',
+          difficulty: 'Easy' as const,
           instructions: [
             'Drain and rinse chickpeas',
             'Dice tomatoes and cucumber',
@@ -78,11 +79,9 @@ export function RecipeGenerator() {
           id: '2',
           name: 'Veggie Stir Fry with Rice',
           ingredients: ['rice', 'broccoli', 'carrots', 'bell peppers', 'soy sauce', 'garlic', 'ginger', 'sesame oil'],
-          availableIngredients: ingredients.filter(ing => ['rice', 'broccoli', 'carrots', 'garlic'].includes(ing)),
-          missingIngredients: ['bell peppers', 'soy sauce', 'ginger', 'sesame oil'],
           prepTime: '25 min',
           servings: 3,
-          difficulty: 'Medium',
+          difficulty: 'Medium' as const,
           instructions: [
             'Cook rice according to package instructions',
             'Cut vegetables into bite-sized pieces',
@@ -99,11 +98,9 @@ export function RecipeGenerator() {
           id: '3',
           name: 'Classic Tomato Pasta',
           ingredients: ['pasta', 'tomatoes', 'garlic', 'olive oil', 'basil', 'parmesan cheese', 'salt', 'pepper'],
-          availableIngredients: ingredients.filter(ing => ['pasta', 'tomatoes', 'garlic', 'olive oil'].includes(ing)),
-          missingIngredients: ['basil', 'parmesan cheese', 'salt', 'pepper'],
           prepTime: '20 min',
           servings: 4,
-          difficulty: 'Easy',
+          difficulty: 'Easy' as const,
           instructions: [
             'Boil water and cook pasta according to package directions',
             'Heat olive oil in a large pan',
@@ -115,10 +112,97 @@ export function RecipeGenerator() {
             'Serve immediately'
           ],
           image: 'https://images.unsplash.com/photo-1662478839788-7d2898ca66cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXN0YSUyMHRvbWF0byUyMGJhc2lsfGVufDF8fHx8MTc1NzQ4ODA0N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+        },
+        {
+          id: '4',
+          name: 'Chicken Stir Fry',
+          ingredients: ['chicken', 'broccoli', 'carrots', 'soy sauce', 'garlic', 'ginger', 'rice', 'sesame oil'],
+          prepTime: '30 min',
+          servings: 4,
+          difficulty: 'Medium' as const,
+          instructions: [
+            'Slice chicken into thin strips',
+            'Cut vegetables into bite-sized pieces',
+            'Heat oil in a wok or large pan',
+            'Stir-fry garlic and ginger for 30 seconds',
+            'Add chicken and cook until browned',
+            'Add vegetables and stir-fry until tender',
+            'Add soy sauce and sesame oil',
+            'Serve over cooked rice'
+          ],
+          image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaGlja2VuJTIwc3RpciUyMGZyeXxlbnwxfHx8fDE3NTc0ODgwNDN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+        },
+        {
+          id: '5',
+          name: 'Quinoa Bowl with Veggies',
+          ingredients: ['quinoa', 'avocado', 'tomatoes', 'cucumber', 'olive oil', 'lemon juice', 'spinach', 'chickpeas'],
+          prepTime: '25 min',
+          servings: 2,
+          difficulty: 'Easy' as const,
+          instructions: [
+            'Cook quinoa according to package instructions',
+            'Dice tomatoes, cucumber, and avocado',
+            'Chop spinach',
+            'Drain and rinse chickpeas',
+            'Whisk olive oil and lemon juice for dressing',
+            'Combine all ingredients in a bowl',
+            'Pour dressing over and toss',
+            'Serve immediately'
+          ],
+          image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxxdWluYWElMjBib3dsfGVufDF8fHx8MTc1NzQ4ODA0N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+        },
+        {
+          id: '6',
+          name: 'Beef Tacos',
+          ingredients: ['ground beef', 'tortillas', 'lettuce', 'tomatoes', 'cheese', 'onion', 'garlic', 'cumin'],
+          prepTime: '20 min',
+          servings: 4,
+          difficulty: 'Easy' as const,
+          instructions: [
+            'Brown ground beef in a pan',
+            'Add diced onion and minced garlic',
+            'Season with cumin, salt, and pepper',
+            'Warm tortillas',
+            'Chop lettuce and tomatoes',
+            'Assemble tacos with beef, veggies, and cheese',
+            'Serve immediately'
+          ],
+          image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiZWVmJTIwdGFjb3N8ZW58MXx8fHwxNzU3NDg4MDQzfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
         }
       ];
-      
-      setGeneratedRecipes(mockRecipes);
+
+      // Filter recipes based on user's ingredients with flexible matching
+      const matchingRecipes = allRecipes
+        .map(recipe => {
+          const available = recipe.ingredients.filter(ing => {
+            const ingLower = ing.toLowerCase();
+            return ingredients.some(userIng => {
+              const userIngLower = userIng.toLowerCase();
+              // Check for partial matches, word overlaps, or exact matches
+              return ingLower.includes(userIngLower) || userIngLower.includes(ingLower) ||
+                     ingLower.split(' ').some(word => userIngLower.includes(word) || userIngLower.includes(word));
+            });
+          });
+          const missing = recipe.ingredients.filter(ing => !available.includes(ing));
+          return { ...recipe, availableIngredients: available, missingIngredients: missing };
+        })
+        .filter(recipe => recipe.availableIngredients.length > 0) // Only include recipes with at least one matching ingredient
+        .sort((a, b) => b.availableIngredients.length - a.availableIngredients.length) // Sort by most matching ingredients
+        .slice(0, 3); // Take top 3 matches
+
+      // If no recipes match, return all recipes as suggestions
+      if (matchingRecipes.length === 0) {
+        const allRecipesWithMatch = allRecipes.map(recipe => ({
+          ...recipe,
+          availableIngredients: [],
+          missingIngredients: recipe.ingredients
+        }));
+        setGeneratedRecipes(allRecipesWithMatch.slice(0, 3));
+      } else {
+        setGeneratedRecipes(matchingRecipes);
+      }
+
+      setGeneratedRecipes(matchingRecipes);
       setIsGenerating(false);
     }, 2000);
   };
@@ -340,13 +424,113 @@ export function RecipeGenerator() {
                       </ol>
                     </div>
                     
-                    <Button 
-                      className="w-full bg-[#4CAF50] hover:bg-[#45a049] text-white font-semibold py-3 rounded-lg hover:shadow-lg hover:shadow-[#4CAF50]/30 transition-all duration-200"
-                      variant="default"
-                    >
-                      <ChefHat className="w-4 h-4 mr-2" />
-                      View Full Recipe
-                    </Button>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button 
+                          className="w-full bg-[#4CAF50] hover:bg-[#45a049] text-white font-semibold py-3 rounded-lg hover:shadow-lg hover:shadow-[#4CAF50]/30 transition-all duration-200"
+                          variant="default"
+                        >
+                          <ChefHat className="w-4 h-4 mr-2" />
+                          View Full Recipe
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-[#2C2C2C] border-gray-700 text-white">
+                        <DialogHeader>
+                          <DialogTitle className="text-2xl font-bold text-[#4CAF50] flex items-center gap-3">
+                            <ChefHat className="w-6 h-6" />
+                            {recipe.name}
+                          </DialogTitle>
+                        </DialogHeader>
+                        
+                        <div className="space-y-6">
+                          {/* Recipe Image */}
+                          <div className="relative">
+                            <ImageWithFallback
+                              src={recipe.image}
+                              alt={recipe.name}
+                              className="w-full h-64 object-cover rounded-lg"
+                            />
+                            <Badge 
+                              className={`absolute top-3 right-3 ${getDifficultyColor(recipe.difficulty)} border font-medium`}
+                            >
+                              {recipe.difficulty}
+                            </Badge>
+                          </div>
+
+                          {/* Recipe Meta */}
+                          <div className="flex items-center gap-6 text-[#B0B0B0]">
+                            <div className="flex items-center">
+                              <Clock className="w-5 h-5 mr-2 text-[#4CAF50]" />
+                              <span className="font-medium">Prep Time:</span> {recipe.prepTime}
+                            </div>
+                            <div className="flex items-center">
+                              <Users className="w-5 h-5 mr-2 text-[#4CAF50]" />
+                              <span className="font-medium">Servings:</span> {recipe.servings}
+                            </div>
+                          </div>
+
+                          {/* Ingredients */}
+                          <div className="space-y-4">
+                            <h3 className="text-xl font-semibold text-white flex items-center">
+                              <UtensilsCrossed className="w-5 h-5 mr-2 text-[#4CAF50]" />
+                              Ingredients
+                            </h3>
+                            
+                            <div className="grid md:grid-cols-2 gap-4">
+                              <div>
+                                <h4 className="font-medium text-[#4CAF50] mb-3 flex items-center">
+                                  <CheckCircle className="w-4 h-4 mr-2" />
+                                  Available ({recipe.availableIngredients.length})
+                                </h4>
+                                <div className="space-y-2">
+                                  {recipe.availableIngredients.map((ingredient, index) => (
+                                    <div key={index} className="flex items-center text-[#B0B0B0]">
+                                      <CheckCircle className="w-4 h-4 mr-2 text-[#4CAF50]" />
+                                      {ingredient}
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                              
+                              {recipe.missingIngredients.length > 0 && (
+                                <div>
+                                  <h4 className="font-medium text-[#FF6F00] mb-3 flex items-center">
+                                    <AlertCircle className="w-4 h-4 mr-2" />
+                                    Missing ({recipe.missingIngredients.length})
+                                  </h4>
+                                  <div className="space-y-2">
+                                    {recipe.missingIngredients.map((ingredient, index) => (
+                                      <div key={index} className="flex items-center text-[#B0B0B0]">
+                                        <AlertCircle className="w-4 h-4 mr-2 text-[#FF6F00]" />
+                                        {ingredient}
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Instructions */}
+                          <div className="space-y-4">
+                            <h3 className="text-xl font-semibold text-white flex items-center">
+                              <Sparkles className="w-5 h-5 mr-2 text-[#4CAF50]" />
+                              Instructions
+                            </h3>
+                            <div className="space-y-3">
+                              {recipe.instructions.map((step, index) => (
+                                <div key={index} className="flex items-start">
+                                  <span className="bg-[#4CAF50] text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">
+                                    {index + 1}
+                                  </span>
+                                  <p className="text-[#B0B0B0] leading-relaxed">{step}</p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
                   </CardContent>
                 </Card>
               ))}
