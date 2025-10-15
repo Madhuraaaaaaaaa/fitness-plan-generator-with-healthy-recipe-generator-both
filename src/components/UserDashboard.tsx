@@ -2,7 +2,6 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
-<<<<<<< HEAD
 import {
   User,
   Activity,
@@ -16,20 +15,6 @@ import {
   Settings,
   LogOut,
   Crown
-=======
-import { 
-  User, 
-  Activity, 
-  Calendar, 
-  TrendingUp, 
-  Target, 
-  Clock, 
-  Award, 
-  BookOpen,
-  ChefHat,
-  Settings,
-  LogOut
->>>>>>> d6c212d741b171b1f65d8639f4295a9cf2c64c7b
 } from 'lucide-react';
 
 interface UserDashboardProps {
@@ -56,10 +41,7 @@ export function UserDashboard({ user, onNavigate, onLogout }: UserDashboardProps
   const quickActions = [
     { id: 'fitness', label: 'Generate New Workout', icon: Activity, description: 'Create a personalized fitness plan' },
     { id: 'recipe', label: 'Find New Recipe', icon: ChefHat, description: 'Discover healthy meal ideas' },
-<<<<<<< HEAD
     { id: 'subscription', label: 'Manage Subscription', icon: Crown, description: 'Upgrade your plan for premium features' },
-=======
->>>>>>> d6c212d741b171b1f65d8639f4295a9cf2c64c7b
     { id: 'about', label: 'Learn More', icon: BookOpen, description: 'About FitGen and our mission' },
   ];
 
@@ -128,7 +110,7 @@ export function UserDashboard({ user, onNavigate, onLogout }: UserDashboardProps
               <CardContent className="p-6">
                 <div className="grid md:grid-cols-1 gap-4">
                   {quickActions.map((action) => (
-                    <Card 
+                    <Card
                       key={action.id}
                       className="bg-[#1C1C1C] border-gray-600 hover:border-[#4CAF50]/50 transition-all duration-300 cursor-pointer group"
                       onClick={() => onNavigate(action.id)}
