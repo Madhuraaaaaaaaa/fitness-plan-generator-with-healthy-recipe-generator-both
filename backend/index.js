@@ -200,10 +200,10 @@ app.get('/api/subscriptions/current', (req, res) => {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    const sql = `SELECT us.*, sp.name, sp.duration_months, sp.price, sp.description 
-                 FROM user_subscriptions us 
-                 JOIN subscription_plans sp ON us.plan_id = sp.id 
-                 WHERE us.user_id = ? AND us.status = 'active' 
+    const sql = `SELECT us.*, sp.name, sp.duration_months, sp.price, sp.description
+                 FROM user_subscriptions us
+                 JOIN subscription_plans sp ON us.plan_id = sp.id
+                 WHERE us.user_id = ? AND us.status = 'active'
                  ORDER BY us.start_date DESC LIMIT 1`;
     db.get(sql, [decoded.id], (err, row) => {
       if (err) {

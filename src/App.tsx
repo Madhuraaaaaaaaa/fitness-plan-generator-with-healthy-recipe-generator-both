@@ -6,7 +6,10 @@ import { FitnessGenerator } from './components/FitnessGenerator';
 import { RecipeGenerator } from './components/RecipeGenerator';
 import { AboutPage } from './components/AboutPage';
 import { UserDashboard } from './components/UserDashboard';
+<<<<<<< HEAD
 import { SubscriptionPage } from './components/SubscriptionPage';
+=======
+>>>>>>> d6c212d741b171b1f65d8639f4295a9cf2c64c7b
 import { AuthModals } from './components/AuthModals';
 import { toast } from 'sonner@2.0.3';
 
@@ -50,16 +53,25 @@ export default function App() {
         return <AboutPage />;
       case 'dashboard':
         return user ? (
+<<<<<<< HEAD
           <UserDashboard
             user={user}
             onNavigate={setCurrentPage}
+=======
+          <UserDashboard 
+            user={user} 
+            onNavigate={setCurrentPage} 
+>>>>>>> d6c212d741b171b1f65d8639f4295a9cf2c64c7b
             onLogout={handleLogout}
           />
         ) : (
           <HomePage onNavigate={setCurrentPage} />
         );
+<<<<<<< HEAD
       case 'subscription':
         return <SubscriptionPage />;
+=======
+>>>>>>> d6c212d741b171b1f65d8639f4295a9cf2c64c7b
       default:
         return <HomePage onNavigate={setCurrentPage} />;
     }

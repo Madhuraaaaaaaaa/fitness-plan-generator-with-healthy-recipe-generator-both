@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
+<<<<<<< HEAD
 import {
   User,
   Activity,
@@ -15,6 +16,20 @@ import {
   Settings,
   LogOut,
   Crown
+=======
+import { 
+  User, 
+  Activity, 
+  Calendar, 
+  TrendingUp, 
+  Target, 
+  Clock, 
+  Award, 
+  BookOpen,
+  ChefHat,
+  Settings,
+  LogOut
+>>>>>>> d6c212d741b171b1f65d8639f4295a9cf2c64c7b
 } from 'lucide-react';
 
 interface UserDashboardProps {
@@ -41,7 +56,10 @@ export function UserDashboard({ user, onNavigate, onLogout }: UserDashboardProps
   const quickActions = [
     { id: 'fitness', label: 'Generate New Workout', icon: Activity, description: 'Create a personalized fitness plan' },
     { id: 'recipe', label: 'Find New Recipe', icon: ChefHat, description: 'Discover healthy meal ideas' },
+<<<<<<< HEAD
     { id: 'subscription', label: 'Manage Subscription', icon: Crown, description: 'Upgrade your plan for premium features' },
+=======
+>>>>>>> d6c212d741b171b1f65d8639f4295a9cf2c64c7b
     { id: 'about', label: 'Learn More', icon: BookOpen, description: 'About FitGen and our mission' },
   ];
 

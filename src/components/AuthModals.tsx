@@ -295,7 +295,7 @@ export function AuthModals({
                 <h3 className="text-xl font-semibold text-white mb-2">Reset Password</h3>
                 <p className="text-[#B0B0B0]">Enter your email to receive a password reset link</p>
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="forgot-email" className="text-white font-medium">Email Address</Label>
                 <Input
